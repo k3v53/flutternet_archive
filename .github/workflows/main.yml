@@ -25,8 +25,6 @@ jobs:
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GH_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
           title: "Development Build"
           files: |
             build/app/outputs/apk/release/app-release.apk
@@ -45,10 +43,8 @@ jobs:
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GH_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
           files: |
-            build/linux/release/bundle/linux-release.zip
+           linux-release.zip
   build_windows:
     runs-on: windows-latest
     steps:
@@ -61,13 +57,11 @@ jobs:
       - name: Compress windows release
         uses: vimtor/action-zip@v1
         with:
-          files: build/windows/runner/Release
+          files: build/windows/runner/Release/
           dest: windows-release.zip
-      - name: Upload Linux zip to releases
+      - name: Upload windows zip to releases
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GH_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
           files: |
-            build/windows/runner/Release/windows-release.zip
+            windows-release.zip
