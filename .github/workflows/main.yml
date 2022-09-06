@@ -53,31 +53,17 @@ jobs:
         with:
           name: windows-release
           path: build/windows/runner/Release/
-  build_macos_ios:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          architecture: x64
-      - run: flutter config --enable-macos-desktop
-      - run: flutter build macos
-      - run: flutter build ios --release --no-codesign
-      - name: Upload macos zip to artifacts
-        uses: actions/upload-artifact@master
-        with:
-          name: macos-release
-          path: build/linux/release/bundle/
   deploy_release:
     runs-on: ubuntu-latest
-    needs: [build_and_deploy_ubuntu, build_windows, build_macos_ios]
+    needs: [build_and_deploy_ubuntu, build_windows]
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v3
+        with:
+          path: releases/
       - name: Create a new release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GH_TOKEN }}"
           files: |
-            *
+            releases/*
