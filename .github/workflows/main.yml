@@ -17,31 +17,28 @@ jobs:
         with:
           channel: 'stable'
       - run: flutter build apk
-      - run: flutter build appbundle
-      - name: Upload APK and Appbundle to releases
-        uses: "marvinpinto/action-automatic-releases@latest"
+      - name: Upload apk to artifacts
+        uses: actions/upload-artifact@master
         with:
-          repo_token: "${{ secrets.GH_TOKEN }}"
-          title: "Development Build"
-          files: |
-            build/app/outputs/apk/release/app-release.apk
-            build/app/outputs/bundle/release/app-release.aab
+          name: app-release.apk
+          path: build/app/outputs/apk/release/app-release.apk
+      - run: flutter build appbundle
+      - name: Upload appbundle to artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: app-release.aab
+          path: build/app/outputs/bundle/release/app-release.aab
+
       - run: |
          sudo apt-get update -y
          sudo apt-get install -y ninja-build libgtk-3-dev
       - run: flutter config --enable-linux-desktop
       - run: flutter build linux
-      - name: Compress linux release
-        uses: vimtor/action-zip@v1
+      - name: Upload Linux zip to artifacts
+        uses: actions/upload-artifact@master
         with:
-          files: build/linux/release/bundle/
-          dest: linux-release.zip
-      - name: Upload Linux zip to releases
-        uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GH_TOKEN }}"
-          files: |
-           linux-release.zip
+          name: linux-release
+          path: build/linux/release/bundle/
   build_windows:
     runs-on: windows-latest
     steps:
@@ -51,14 +48,8 @@ jobs:
           channel: 'stable'
       - run: flutter config --enable-windows-desktop
       - run: flutter build windows
-      - name: Compress windows release
-        uses: vimtor/action-zip@v1
+      - name: Upload Windows zip to artifacts
+        uses: actions/upload-artifact@master
         with:
-          files: build/windows/runner/Release/
-          dest: windows-release.zip
-      - name: Upload windows zip to releases
-        uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GH_TOKEN }}"
-          files: |
-            windows-release.zip
+          name: windows-release
+          path: build/windows/runner/Release/
