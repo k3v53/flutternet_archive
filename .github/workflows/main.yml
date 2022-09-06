@@ -1,8 +1,7 @@
 name: Flutter Workflow
 on:
   push:
-    branches: 
-    - "dev"
+    branches: ["master", "dev"]
     tags:
       - "v*"
 jobs:
