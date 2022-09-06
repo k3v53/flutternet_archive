@@ -1,11 +1,8 @@
 name: Flutter Workflow
-on: 
-  release:
-    types: [published]
+on:
   push:
-    branches:
-      - "master"
-      - "testing-workflows"
+    tags:
+      - "v*"
 jobs:
   build_and_deploy_ubuntu:
     runs-on: ubuntu-latest
