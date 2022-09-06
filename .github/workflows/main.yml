@@ -45,7 +45,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: linux-release
-          path: build/linux/release/bundle/
+          path: build/linux/release/
   build_windows:
     runs-on: windows-latest
     steps:
