@@ -131,7 +131,7 @@ jobs:
         working-directory: ${{ matrix.build_path }}
       - if: matrix.target == 'macOS'
         name: Compress build for macOS
-        run: ditto -c -k --sequesterRsrc --keepParent Flutter\ Gallery.app $GITHUB_WORKSPACE/flutternet_archive_${{ matrix.target }}.zip
+        run: ditto -c -k --sequesterRsrc --keepParent flutternet_archive.app $GITHUB_WORKSPACE/flutternet_archive_${{ matrix.target }}.zip
         working-directory: ${{ matrix.build_path }}
       - if: matrix.target == 'Windows'
         name: Compress build for Windows
