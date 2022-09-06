@@ -53,3 +53,15 @@ jobs:
         with:
           name: windows-release
           path: build/windows/runner/Release/
+  deploy_release:
+    runs-on: ubuntu-latest
+    needs: [build_and_deploy_ubuntu, build_windows]
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+      - name: Create a new release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GH_TOKEN }}"
+          files: |
+            ./*
