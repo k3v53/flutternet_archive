@@ -20,14 +20,8 @@ jobs:
         with:
           channel: 'stable'
       - run: flutter build apk
-      - run: flutter build linux
-      - name: Compress linux release
-        uses: vimtor/action-zip@v1
-        with:
-          files: build/linux/release/bundle/
-          dest: linux-release.zip
-
-      - name: Upload APK to releases
+      - run: flutter build appbundle
+      - name: Upload APK and Appbundle to releases
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GH_TOKEN }}"
@@ -36,4 +30,45 @@ jobs:
           title: "Development Build"
           files: |
             build/app/outputs/apk/release/app-release.apk
+            build/app/outputs/bundle/release/app-release.aab
+      - name: Install required libraries for linux
+      - run: |
+         sudo apt-get update -y
+         sudo apt-get install -y ninja-build libgtk-3-dev
+      - run: flutter config --enable-linux-desktop
+      - run: flutter build linux
+      - name: Compress linux release
+        uses: vimtor/action-zip@v1
+        with:
+          files: build/linux/release/bundle/
+          dest: linux-release.zip
+      - name: Upload Linux zip to releases
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GH_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          files: |
             build/linux/release/bundle/linux-release.zip
+  build_windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      - run: flutter config --enable-windows-desktop
+      - run: flutter build windows
+      - name: Compress windows release
+        uses: vimtor/action-zip@v1
+        with:
+          files: build/windows/runner/Release
+          dest: windows-release.zip
+      - name: Upload Linux zip to releases
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GH_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          files: |
+            build/windows/runner/Release/windows-release.zip
