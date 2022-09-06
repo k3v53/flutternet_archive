@@ -1,11 +1,13 @@
 name: Flutter Workflow
 on: 
+  release:
+    types: [published]
   push:
     branches:
       - "master"
       - "testing-workflows"
 jobs:
-  build:
+  build_and_deploy_ubuntu:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -17,14 +19,16 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-      - run: flutter pub get
       - run: flutter build apk
-      - name: Upload APK
-        uses: actions/upload-artifact@v3
+      - run: flutter build linux
+      - name: Compress linux release
+        uses: vimtor/action-zip@v1
         with:
-          name: release-apk
-          path: build/app/outputs/apk/release/app-release.apk
-      - uses: "marvinpinto/action-automatic-releases@latest"
+          files: build/linux/release/bundle/
+          dest: linux-release.zip
+
+      - name: Upload APK to releases
+        uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GH_TOKEN }}"
           automatic_release_tag: "latest"
@@ -32,3 +36,4 @@ jobs:
           title: "Development Build"
           files: |
             build/app/outputs/apk/release/app-release.apk
+            build/linux/release/bundle/linux-release.zip
