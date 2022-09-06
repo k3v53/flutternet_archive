@@ -1,6 +1,8 @@
 name: Flutter Workflow
 on:
   push:
+    branches: 
+    - "dev"
     tags:
       - "v*"
 jobs:
@@ -100,5 +102,6 @@ jobs:
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GH_TOKEN }}"
-          prerelease: false
+          automatic_release_tag: "${{ github.ref }}"
+          prerelease: true
           files: releases/
