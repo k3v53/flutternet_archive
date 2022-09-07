@@ -118,7 +118,7 @@ jobs:
         working-directory: android
 
       # Build the application.
-      - run: flutter build -v ${{ matrix.build_target }} --release
+      - run: flutter build -v ${{ matrix.build_target }} --release --build-number "$(date +%s)"
 
       # Package the build.
       - if: matrix.target == 'Windows'
