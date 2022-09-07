@@ -1,13 +1,46 @@
 {
-  // See https://go.microsoft.com/fwlink/?LinkId=733558
-  // for the documentation about the tasks.json format
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "label": "flutter: Generate icons",
-      "type": "shell",
-      "command": "flutter pub run flutter_launcher_icons:main",
-      "problemMatcher": []
-    }
-  ]
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "flutter: Generate icons",
+			"type": "shell",
+			"command": "flutter pub run flutter_launcher_icons:main",
+			"problemMatcher": []
+		},
+		{
+			"label": "Create a new release with builds",
+			"type": "shell",
+			"command": "gh",
+			"windows": {
+				"args": [
+					"workflow",
+					"run",
+					"34129884",
+					"-r",
+					"\"$(git branch --show-current)\"",
+					"-f",
+					"ref='${input:ref}'",
+					"-f",
+					"version=${input:version}"
+				]
+			},
+			"problemMatcher": []
+		}
+	],
+	"inputs": [
+		{
+			"id": "ref",
+			"description": "Branch, Tag or SHA",
+			"type": "promptString",
+			"default": "master"
+		},
+		{
+			"id": "version",
+			"description": "Version tag",
+			"type": "promptString",
+			"default": "v0.0.1"
+		}
+	]
 }
