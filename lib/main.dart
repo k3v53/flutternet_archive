@@ -22,16 +22,19 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Flutternet Archive'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
+  MyHomePage({super.key, required this.title});
+  final List<Map> _screens = [
+    {'icon': Icons.home, 'label': "Home"},
+    {'icon': Icons.settings, 'label': "Settings"}
+  ];
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
@@ -49,6 +52,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  int _screenIndex = 0;
 
   void _incrementCounter() {
     setState(() {
@@ -110,6 +114,18 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+      bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _screenIndex,
+          onTap: (i) {
+            setState(() {
+              _screenIndex = i;
+            });
+          },
+          selectedItemColor: Colors.black,
+          items: [
+            for (Map s in widget._screens)
+              BottomNavigationBarItem(icon: Icon(s['icon']), label: s['label'])
+          ]),
     );
   }
 }
