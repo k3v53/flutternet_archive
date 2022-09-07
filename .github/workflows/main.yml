@@ -13,6 +13,16 @@ on:
         required: true
         default: "v0.0.1"
         type: string
+      draft:
+        description: "Is this release a draft?"
+        required: true
+        default: false
+        type: boolean
+      prerelease:
+        description: "Is this a pre-release?"
+        required: true
+        default: true
+        type: boolean
 
 # Declare default permissions as read only.
 permissions: read-all
@@ -31,8 +41,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           tag_name: ${{ github.event.inputs.version }}
-          draft: true
-          prerelease: false
+          draft: ${{ github.event.inputs.draft }}
+          prerelease: ${{ github.event.inputs.prerelease }}
           generate_release_notes: true
 
   create-build:
