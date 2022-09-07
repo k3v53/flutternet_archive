@@ -50,7 +50,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        target: [macOS, Windows, Linux, Android]
+        target: [macOS, Windows, Linux, Android, Web]
         include:
           - os: macos-latest
             target: macOS
@@ -76,6 +76,12 @@ jobs:
             build_path: build/app/outputs/flutter-apk
             asset_extension: .apk
             asset_content_type: application/vnd.android.package-archive
+          - os: ubuntu-latest
+            target: Web
+            build_target: web
+            build_path: build/web
+            asset_extension: .tar.gz
+            asset_content_type: application/gzip
       # Disable fail-fast as we want results from all even if one fails.
       fail-fast: false
     needs: draft-release
@@ -144,6 +150,10 @@ jobs:
         working-directory: ${{ matrix.build_path }}
       - if: matrix.target == 'Linux'
         name: Compress build for Linux
+        run: tar czf $GITHUB_WORKSPACE/flutternet_archive_${{ matrix.target }}.tar.gz *
+        working-directory: ${{ matrix.build_path }}
+      - if: matrix.target == 'Web'
+        name: Compress build for Web
         run: tar czf $GITHUB_WORKSPACE/flutternet_archive_${{ matrix.target }}.tar.gz *
         working-directory: ${{ matrix.build_path }}
       - if: matrix.target == 'macOS'
