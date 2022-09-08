@@ -21,6 +21,29 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def dartEnvironmentVariables = [
+    DEFINE_APP_NAME: 'Flutternet Archive',
+    DEFINE_APP_SUFFIX: ''
+];
+if (project.hasProperty('dart-defines')) {
+    dartEnvironmentVariables = dartEnvironmentVariables + project.property('dart-defines')
+        .split(',')
+        .collectEntries { entry ->
+            def pair = new String(entry.decodeBase64(), 'UTF-8').split('=')
+            [(pair.first()): pair.last()]
+        }
+}
+switch (dartEnvironmentVariables.BUILD_TYPE) {
+    case 'stable':
+        dartEnvironmentVariables.DEFINE_APP_NAME = 'Flutternet Archive'
+        dartEnvironmentVariables.DEFINE_APP_SUFFIX = null
+        break
+    default:
+        dartEnvironmentVariables.DEFINE_APP_NAME = 'Flutternet Archive (Dev Build)'
+        dartEnvironmentVariables.DEFINE_APP_SUFFIX = '.dev'
+        break
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
@@ -44,13 +67,15 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.flutternet_archive"
+        applicationId "com.k3v53.flutternet_archive"
+        applicationIdSuffix dartEnvironmentVariables.DEFINE_APP_SUFFIX
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        resValue "string", "app_name", dartEnvironmentVariables.DEFINE_APP_NAME
     }
 
     buildTypes {
