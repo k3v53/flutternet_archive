@@ -3,11 +3,26 @@ on:
   # Enable manual run
   workflow_dispatch:
     inputs:
+      ref:
+        description: "The ref (branch, tag, SHA) from where the build should happen"
+        required: false
+        default: "master"
+        type: string
       version:
         description: "Tag to create (e.g. v2.10.0). Must include 'v' and must match pubspec"
         required: true
-        default: "v2.10.0"
+        default: "v0.0.1"
         type: string
+      draft:
+        description: "Is this release a draft?"
+        required: true
+        default: false
+        type: boolean
+      prerelease:
+        description: "Is this a pre-release?"
+        required: true
+        default: true
+        type: boolean
 
 # Declare default permissions as read only.
 permissions: read-all
@@ -26,8 +41,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           tag_name: ${{ github.event.inputs.version }}
-          draft: true
-          prerelease: false
+          draft: ${{ github.event.inputs.draft }}
+          prerelease: ${{ github.event.inputs.prerelease }}
           generate_release_notes: true
 
   create-build:
@@ -35,7 +50,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        target: [macOS, Windows, Linux, Android]
+        target: [macOS, Windows, Linux, Android, Web]
         include:
           - os: macos-latest
             target: macOS
@@ -61,6 +76,12 @@ jobs:
             build_path: build/app/outputs/flutter-apk
             asset_extension: .apk
             asset_content_type: application/vnd.android.package-archive
+          - os: ubuntu-latest
+            target: Web
+            build_target: web
+            build_path: build/web
+            asset_extension: .tar.gz
+            asset_content_type: application/gzip
       # Disable fail-fast as we want results from all even if one fails.
       fail-fast: false
     needs: draft-release
@@ -92,6 +113,8 @@ jobs:
       # Checkout code, recreate missing files, and get packages.
       - name: Checkout repository
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+        with:
+          ref: "${{ github.event.inputs.ref }}"
       - run: flutter create .
       - run: flutter pub get
 
@@ -111,7 +134,7 @@ jobs:
         working-directory: android
 
       # Build the application.
-      - run: flutter build -v ${{ matrix.build_target }} --release
+      - run: flutter build -v ${{ matrix.build_target }} --release --build-number "$(date +%s)"
 
       # Package the build.
       - if: matrix.target == 'Windows'
@@ -127,6 +150,10 @@ jobs:
         working-directory: ${{ matrix.build_path }}
       - if: matrix.target == 'Linux'
         name: Compress build for Linux
+        run: tar czf $GITHUB_WORKSPACE/flutternet_archive_${{ matrix.target }}.tar.gz *
+        working-directory: ${{ matrix.build_path }}
+      - if: matrix.target == 'Web'
+        name: Compress build for Web
         run: tar czf $GITHUB_WORKSPACE/flutternet_archive_${{ matrix.target }}.tar.gz *
         working-directory: ${{ matrix.build_path }}
       - if: matrix.target == 'macOS'
