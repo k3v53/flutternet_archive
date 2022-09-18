@@ -10,7 +10,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        target: [macOS, Windows, Linux, Android, Web]
+        target: [macOS, Windows, Linux]
         include:
           - os: macos-latest
             target: macOS
@@ -28,18 +28,6 @@ jobs:
             target: Linux
             build_target: linux
             build_path: build/linux/x64/release/bundle
-            asset_extension: .tar.gz
-            asset_content_type: application/gzip
-          - os: ubuntu-latest
-            target: Android
-            build_target: apk
-            build_path: build/app/outputs/flutter-apk
-            asset_extension: .apk
-            asset_content_type: application/vnd.android.package-archive
-          - os: ubuntu-latest
-            target: Web
-            build_target: web
-            build_path: build/web
             asset_extension: .tar.gz
             asset_content_type: application/gzip
       # Disable fail-fast as we want results from all even if one fails.
