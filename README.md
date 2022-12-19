@@ -1,16 +1,28 @@
 # flutternet_archive
 
-A new Flutter project.
+Flutternet Archive is a Flutter project that allows users to navigate and interact with the Internet Archive, a digital library of internet sites and other cultural artifacts in digital form. The project aims to provide a simple and minimalist user interface for accessing and uploading/retrieving files from the Internet Archive.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- Navigate the Internet Archive and browse its collections
+- Upload and retrieve files from the Internet Archive
+- Caching capabilities for faster access to frequently used content
+- Offline manager for accessing content without an internet connection
 
-A few resources to get you started if this is your first Flutter project:
+## Installation
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Still in development...
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Usage
+
+Still in development...
+
+## Screenshots
+
+Still in development...
+
+## Contributing
+
+We welcome contributions to Flutternet Archive! If you would like to report a bug or request a feature, please open an issue on our GitHub repository. If you would like to contribute code, please fork the repository and create a pull request with your changes.
+
+Thank you for considering contributing to Flutternet Archive!
