@@ -12,12 +12,23 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
+  drift: ^2.4.0
+  equatable: ^2.0.5
+  freezed_annotation: ^2.2.0
+  intl: ^0.17.0
+  isolate_bloc: ^2.1.1
+  json_annotation: ^4.7.0
+  path: ^1.8.2
+  path_provider: ^2.0.11
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: ^0.11.0
   flutter_lints: ^2.0.0
+  build_runner: ^2.0.0
+  drift_dev: ^2.4.0
+
 
 flutter_icons:
   android: true
